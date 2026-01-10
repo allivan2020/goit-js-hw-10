@@ -1,22 +1,22 @@
-// Імпорти через Vite (модуль)
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-// DOM елементи
-const input = document.querySelector('#datetime-picker');
-const startBtn = document.querySelector('#start-button');
-const daysEl = document.querySelector('[data-days]');
-const hoursEl = document.querySelector('[data-hours]');
-const minutesEl = document.querySelector('[data-minutes]');
-const secondsEl = document.querySelector('[data-seconds]');
+const refs = {
+  input: document.querySelector('#datetime-picker'),
+  startBtn: document.querySelector('#start-button'),
+  daysEl: document.querySelector('[data-days]'),
+  hoursEl: document.querySelector('[data-hours]'),
+  minutesEl: document.querySelector('[data-minutes]'),
+  secondsEl: document.querySelector('[data-seconds]'),
+};
 
 let selectedDate = null;
 let timerId = null;
-startBtn.disabled = true;
+refs.startBtn.disabled = true;
 
-flatpickr(input, {
+flatpickr(refs.input, {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
@@ -27,7 +27,7 @@ flatpickr(input, {
 
     if (pickedDate <= currentDate) {
       selectedDate = null;
-      startBtn.disabled = true;
+      refs.startBtn.disabled = true;
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
@@ -35,7 +35,7 @@ flatpickr(input, {
       });
     } else {
       selectedDate = pickedDate;
-      startBtn.disabled = false;
+      refs.startBtn.disabled = false;
     }
   },
 });
@@ -48,8 +48,8 @@ function convertMs(ms) {
 
   const days = Math.floor(ms / day);
   const hours = Math.floor((ms % day) / hour);
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const minutes = Math.floor((ms % hour) / minute);
+  const seconds = Math.floor((ms % minute) / second);
 
   return { days, hours, minutes, seconds };
 }
@@ -59,17 +59,17 @@ function addLeadingZero(value) {
 }
 
 function updateClockface({ days, hours, minutes, seconds }) {
-  daysEl.textContent = days;
-  hoursEl.textContent = addLeadingZero(hours);
-  minutesEl.textContent = addLeadingZero(minutes);
-  secondsEl.textContent = addLeadingZero(seconds);
+  refs.daysEl.textContent = addLeadingZero(days);
+  refs.hoursEl.textContent = addLeadingZero(hours);
+  refs.minutesEl.textContent = addLeadingZero(minutes);
+  refs.secondsEl.textContent = addLeadingZero(seconds);
 }
 
-startBtn.addEventListener('click', () => {
+refs.startBtn.addEventListener('click', () => {
   if (!selectedDate) return;
 
-  startBtn.disabled = true;
-  input.disabled = true;
+  refs.startBtn.disabled = true;
+  refs.input.disabled = true;
 
   timerId = setInterval(() => {
     const currentTime = new Date();
@@ -77,7 +77,7 @@ startBtn.addEventListener('click', () => {
 
     if (deltaTime <= 0) {
       clearInterval(timerId);
-      input.disabled = false;
+      refs.input.disabled = false;
       updateClockface({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       return;
     }
