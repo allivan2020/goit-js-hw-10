@@ -5,7 +5,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 const refs = {
   input: document.querySelector('#datetime-picker'),
-  startBtn: document.querySelector('#start-button'),
+  startBtn: document.querySelector('[data-start]'),
   daysEl: document.querySelector('[data-days]'),
   hoursEl: document.querySelector('[data-hours]'),
   minutesEl: document.querySelector('[data-minutes]'),
@@ -48,8 +48,8 @@ function convertMs(ms) {
 
   const days = Math.floor(ms / day);
   const hours = Math.floor((ms % day) / hour);
-  const minutes = Math.floor((ms % hour) / minute);
-  const seconds = Math.floor((ms % minute) / second);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
 }
@@ -59,7 +59,7 @@ function addLeadingZero(value) {
 }
 
 function updateClockface({ days, hours, minutes, seconds }) {
-  refs.daysEl.textContent = addLeadingZero(days);
+  refs.daysEl.textContent = days > 99 ? days : addLeadingZero(days);
   refs.hoursEl.textContent = addLeadingZero(hours);
   refs.minutesEl.textContent = addLeadingZero(minutes);
   refs.secondsEl.textContent = addLeadingZero(seconds);

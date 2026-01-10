@@ -22,17 +22,15 @@ refs.form.addEventListener('submit', event => {
   });
 
   promise
-    .then(delayMs => {
+    .then(delay => {
       iziToast.success({
-        title: 'Success',
-        message: `Fulfilled promise in ${delayMs}ms`,
+        message: `✅ Fulfilled promise in ${delay}ms`,
         position: 'topRight',
       });
     })
-    .catch(delayMs => {
+    .catch(delay => {
       iziToast.error({
-        title: 'Error',
-        message: `Rejected promise in ${delayMs}ms`,
+        message: `❌ Rejected promise in ${delay}ms`,
         position: 'topRight',
       });
     });
